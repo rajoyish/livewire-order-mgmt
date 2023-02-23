@@ -7,7 +7,7 @@
             <div class="relative flex-1 col-span-4" x-data="{ show: true }">
                 <input
                     class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    id="password" :type="show ? 'password' : 'text'" name="password" required
+                    id="password" :type="show ? 'password' : 'text'" name="password" required wire:model="password"
                     autocomplete="new-password" />
 
                 <button type="button" class="flex absolute inset-y-0 right-0 items-center pr-3" @click="show = !show"
@@ -30,7 +30,15 @@
                     </svg>
                 </button>
             </div>
+            <div class="flex items-center place-content-end ml-1">
+                <x-primary-button wire:click="generatePassword" type="button">Generate</x-primary-button>
+            </div>
         </div>
+        <span class="text-sm">
+            <span class="font-semibold">Password strength: </span>{{ $strengthLevels[$strengthScore] ?? 'Weak' }}
+            <progress value="{{ $strengthScore }}" max="4" class="w-full"></progress>
+
+        </span>
 
         <x-input-error :messages="$errors->get('password')" class="mt-2" />
     </div>
@@ -40,7 +48,7 @@
         <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
 
         <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation"
-            required autocomplete="new-password" />
+            wire:model="password_confirmation" required autocomplete="new-password" />
 
         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
     </div>
