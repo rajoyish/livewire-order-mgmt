@@ -13,5 +13,6 @@ class Category extends Model
         'name',
         'slug',
         'is_active',
+        'position',
     ];
 }

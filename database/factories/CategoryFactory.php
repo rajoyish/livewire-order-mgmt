@@ -22,6 +22,7 @@ class CategoryFactory extends Factory
         return [
             'name' => $country,
             'slug' => Str::slug($country),
+            'position' => fake()->numberBetween(1, 10),
         ];
     }
 }
