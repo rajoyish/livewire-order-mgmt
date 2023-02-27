@@ -17,11 +17,11 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $country = fake()->unique()->country();
+        $city = fake()->unique()->city();
 
         return [
-            'name' => $country,
-            'slug' => Str::slug($country),
+            'name' => $city,
+            'slug' => Str::slug($city),
             'position' => fake()->numberBetween(1, 10),
         ];
     }
