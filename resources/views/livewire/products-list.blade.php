@@ -44,6 +44,50 @@
                                     <th class="px-6 py-3 text-left bg-gray-50">
                                     </th>
                                 </tr>
+                                {{-- Search Component --}}
+                                <tr>
+                                    <td></td>
+                                    <td class="px-2 py-2">
+                                        <input wire:model="searchColumns.name" type="text" placeholder="Search..."
+                                            class="w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                    </td>
+                                    <td class="px-2 py-1">
+                                        <select wire:model="searchColumns.category_id"
+                                            class="w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                            <option value="">-- choose category --</option>
+                                            @foreach ($categories as $id => $category)
+                                                <option value="{{ $id }}">{{ $category }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td class="px-2 py-1">
+                                        <select wire:model="searchColumns.country_id"
+                                            class="w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                            <option value="">-- choose country --</option>
+                                            @foreach ($countries as $id => $country)
+                                                <option value="{{ $id }}">{{ $country }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td class="px-2 py-1 text-sm" colspan="2">
+                                        <div class="flex gap-2 items-center mb-1">
+                                            <div class="flex-1">From</div>
+                                            <div>
+                                                <input wire:model="searchColumns.price.0" type="number"
+                                                    class="flex-1 text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                            </div>
+                                        </div>
+                                        <div class="flex gap-2 items-center">
+                                            <div class="flex-1">To</div>
+                                            <div>
+                                                <input wire:model="searchColumns.price.1" type="number"
+                                                    class="flex-1 text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                {{-- / Search Component --}}
                             </thead>
 
                             <tbody class="bg-white divide-y divide-gray-200 divide-solid">
@@ -62,14 +106,14 @@
                                             @endforeach
                                         </td>
                                         <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                                            {{ $product->country->name }}
+                                            {{ $product->countryName }}
                                         </td>
                                         <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
                                             ${{ number_format($product->price / 100, 2) }}
                                         </td>
-                                        <td>
+                                        <td class="flex gap-2 p-2">
                                             <a
-                                                class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase bg-gray-800 rounded-md border border-transparent hover:bg-gray-700">
+                                                class="px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase bg-gray-800 rounded-md border border-transparent hover:bg-gray-700">
                                                 Edit
                                             </a>
                                             <button
