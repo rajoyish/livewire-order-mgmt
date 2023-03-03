@@ -12,14 +12,18 @@ class ProductsList extends Component
 {
     use WithPagination;
 
-    public array $categories;
+    public array $categories = [];
 
-    public array $countries;
+    public array $countries = [];
+
+    public string $sortColumn = 'products.name';
+
+    public string $sortDirection = 'ASC';
 
     public array $searchColumns = [
         'name' => '',
         'price' => ['', ''],
-        'description' => '',
+        'DESCription' => '',
         'category_id' => 0,
         'country_id' => 0,
     ];
@@ -29,6 +33,25 @@ class ProductsList extends Component
         $this->categories = Category::pluck('name', 'id')->toArray();
         $this->countries = Country::pluck('name', 'id')->toArray();
     }
+
+    public function sortByColumn($column): void
+    {
+        if ($this->sortColumn == $column) {
+            $this->sortDirection = $this->sortDirection == 'ASC' ? 'DESC' : 'ASC';
+        } else {
+            $this->reset('sortDirection');
+            $this->sortColumn = $column;
+        }
+    }
+
+    protected $queryString = [
+        'sortColumn' => [
+            'except' => 'products.name',
+        ],
+        'sortDirection' => [
+            'except' => 'ASC',
+        ],
+    ];
 
     public function render()
     {
@@ -52,6 +75,8 @@ class ProductsList extends Component
                     ->when($column == 'name', fn ($products) => $products->where('products.'.$column, 'LIKE', '%'.$value.'%'));
             }
         }
+
+        $products->orderBy($this->sortColumn, $this->sortDirection);
 
         return view('livewire.products-list', [
             'products' => $products->paginate(10),
