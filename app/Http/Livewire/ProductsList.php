@@ -7,6 +7,10 @@ use App\Models\Country;
 use App\Models\Product;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+use ProductsExport;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductsList extends Component
 {
@@ -88,6 +92,13 @@ class ProductsList extends Component
             'except' => 'ASC',
         ],
     ];
+
+    public function export($format): BinaryFileResponse
+    {
+        abort_if(! in_array($format, ['csv', 'xlsx', 'pdf']), Response::HTTP_NOT_FOUND);
+
+        return Excel::download(new ProductsExport($this->selected), 'products.'.$format);
+    }
 
     public function render()
     {
