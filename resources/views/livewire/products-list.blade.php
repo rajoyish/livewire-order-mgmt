@@ -12,7 +12,7 @@
 
                     <div class="mb-4">
                         <div class="mb-4">
-                            <a
+                            <a href="{{ route('products.create') }}"
                                 class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase bg-gray-800 rounded-md border border-transparent hover:bg-gray-700">
                                 Create Product
                             </a>
@@ -137,7 +137,7 @@
                                             ${{ number_format($product->price / 100, 2) }}
                                         </td>
                                         <td class="flex gap-2 p-2">
-                                            <a
+                                            <a href="{{ route('products.edit', $product) }}"
                                                 class="px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase bg-gray-800 rounded-md border border-transparent hover:bg-gray-700">
                                                 Edit
                                             </a>

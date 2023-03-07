@@ -15,4 +15,9 @@ class Category extends Model
         'is_active',
         'position',
     ];
+
+    public function scopeActive($query)
+    {
+        $query->where('is_active', 1);
+    }
 }
