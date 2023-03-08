@@ -31,7 +31,7 @@ class ProductsList extends Component
     public array $searchColumns = [
         'name' => '',
         'price' => ['', ''],
-        'DESCription' => '',
+        'Description' => '',
         'category_id' => 0,
         'country_id' => 0,
     ];
@@ -95,9 +95,9 @@ class ProductsList extends Component
 
     public function export($format): BinaryFileResponse
     {
-        abort_if(! in_array($format, ['csv', 'xlsx', 'pdf']), Response::HTTP_NOT_FOUND);
+        abort_if(!in_array($format, ['csv', 'xlsx', 'pdf']), Response::HTTP_NOT_FOUND);
 
-        return Excel::download(new ProductsExport($this->selected), 'products.'.$format);
+        return Excel::download(new ProductsExport($this->selected), 'products.' . $format);
     }
 
     public function render()
@@ -108,7 +108,7 @@ class ProductsList extends Component
             ->with('categories');
 
         foreach ($this->searchColumns as $column => $value) {
-            if (! empty($value)) {
+            if (!empty($value)) {
                 $products->when($column == 'price', function ($products) use ($value) {
                     if (is_numeric($value[0])) {
                         $products->where('products.price', '>=', $value[0] * 100);
@@ -119,7 +119,7 @@ class ProductsList extends Component
                 })
                     ->when($column == 'category_id', fn ($products) => $products->whereRelation('categories', 'id', $value))
                     ->when($column == 'country_id', fn ($products) => $products->whereRelation('country', 'id', $value))
-                    ->when($column == 'name', fn ($products) => $products->where('products.'.$column, 'LIKE', '%'.$value.'%'));
+                    ->when($column == 'name', fn ($products) => $products->where('products.' . $column, 'LIKE', '%' . $value . '%'));
             }
         }
 
