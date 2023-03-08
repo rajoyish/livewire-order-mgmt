@@ -62,12 +62,26 @@ class ProductsList extends Component
     {
         $product = Product::findOrFail($id);
 
+        if ($product->orders()->exists()) {
+            $this->addError('orderexist', 'This product cannot be deleted, it already has orders');
+
+            return;
+        }
+
         $product->delete();
     }
 
     public function deleteSelected(): void
     {
-        $products = Product::whereIn('id', $this->selected)->get();
+        $products = Product::with('orders')->whereIn('id', $this->selected)->get();
+
+        foreach ($products as $product) {
+            if ($product->orders()->exists()) {
+                $this->addError('orderexist', "Product <span class='font-bold'>{$product->name}</span> cannot be deleted, it already has orders");
+
+                return;
+            }
+        }
 
         $products->each->delete();
 
@@ -95,9 +109,9 @@ class ProductsList extends Component
 
     public function export($format): BinaryFileResponse
     {
-        abort_if(!in_array($format, ['csv', 'xlsx', 'pdf']), Response::HTTP_NOT_FOUND);
+        abort_if(! in_array($format, ['csv', 'xlsx', 'pdf']), Response::HTTP_NOT_FOUND);
 
-        return Excel::download(new ProductsExport($this->selected), 'products.' . $format);
+        return Excel::download(new ProductsExport($this->selected), 'products.'.$format);
     }
 
     public function render()
@@ -108,7 +122,7 @@ class ProductsList extends Component
             ->with('categories');
 
         foreach ($this->searchColumns as $column => $value) {
-            if (!empty($value)) {
+            if (! empty($value)) {
                 $products->when($column == 'price', function ($products) use ($value) {
                     if (is_numeric($value[0])) {
                         $products->where('products.price', '>=', $value[0] * 100);
@@ -119,7 +133,7 @@ class ProductsList extends Component
                 })
                     ->when($column == 'category_id', fn ($products) => $products->whereRelation('categories', 'id', $value))
                     ->when($column == 'country_id', fn ($products) => $products->whereRelation('country', 'id', $value))
-                    ->when($column == 'name', fn ($products) => $products->where('products.' . $column, 'LIKE', '%' . $value . '%'));
+                    ->when($column == 'name', fn ($products) => $products->where('products.'.$column, 'LIKE', '%'.$value.'%'));
             }
         }
 
