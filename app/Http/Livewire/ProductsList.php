@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Category;
 use App\Models\Country;
+use App\ModeCls\User;
 use App\Models\Product;
 use Livewire\Component;
 use Livewire\WithPagination;
